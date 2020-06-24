@@ -2687,7 +2687,7 @@ MonoBehaviour:
   PickaxeName: nooblet
   PickaxeDmg: 100
   Inrangee: 5
-  PickaxeDelay: 1
+  PickaxeDelay: 0.3
 --- !u!1 &1447060558
 GameObject:
   m_ObjectHideFlags: 0
@@ -3106,7 +3106,7 @@ MonoBehaviour:
   groundSizeY: 1
   groundSizeZ: 1
   worldSizeX: 30
-  worldSizeY: 30
+  worldSizeY: 650
   worldSizeZ: 30
   initGroundBlocks:
   - {fileID: 917287787}
@@ -3135,6 +3135,7 @@ MonoBehaviour:
   - {fileID: 181858022}
   - {fileID: 468243338}
   originAndGround: {fileID: 282777302}
+  allOresData: {fileID: 0}
 --- !u!4 &1708796850
 Transform:
   m_ObjectHideFlags: 0

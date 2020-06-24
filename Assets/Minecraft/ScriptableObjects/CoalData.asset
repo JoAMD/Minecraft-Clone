@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1635c5aa2679d6342a85a93d5392cb6c, type: 3}
+  m_Name: CoalData
+  m_EditorClassIdentifier: 
+  oreName: Coal
+  oreType: 1
+  orePrefab: {fileID: 5375676464528336763, guid: c537fe5f92e1e4a439142199e3a98c42, type: 3}
+  oreUpperDepth: 100
+  oreLowerDepth: 300
+  totalPercentage: 50
+  outZonePercentage: 20

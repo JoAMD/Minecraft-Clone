@@ -28,6 +28,8 @@ public class MiningGroundBehaviour : MonoBehaviour
     public Transform originAndGround;
     private float originAndGroundYPos;
 
+    public WorldAllOreData allOresData;
+
     private void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
@@ -88,9 +90,9 @@ public class MiningGroundBehaviour : MonoBehaviour
                 //Debug.Log("player facing");
                 continue;
             }
-            //Debug.Log("Y = " + (groundCubePos + currPosOffset).y);
             //For mining above ground
-            if (i == 4 && (groundCubePos + currPosOffset).y > originAndGroundYPos)
+            Vector3 posToSpawn = groundCubePos + currPosOffset;
+            if (i == 4 && posToSpawn.y > originAndGroundYPos)
             {
                 continue;
             }
@@ -98,7 +100,8 @@ public class MiningGroundBehaviour : MonoBehaviour
             //Debug.Log("i = " + i);
             //Debug.Log("DIR[i].CubePosVector3() = " + currPosOffset);
 
-            idx = GetIdx(groundCubePos + currPosOffset);
+
+            idx = GetIdx(posToSpawn);
             if(worldData[idx[0], idx[1], idx[2]].isMinedBefore)
             {
                 continue;
@@ -107,8 +110,11 @@ public class MiningGroundBehaviour : MonoBehaviour
             {
                 continue;
             }
+            int idx = new OreGeneration(allOresData).GenerateOre(posToSpawn.y);
+            Debug.Log("idx = " + idx);
+            _prefabGroundCube = allOresData.allOresData[idx].orePrefab;
 
-            Instantiate(_prefabGroundCube, groundCubePos + currPosOffset, Quaternion.identity, transform);
+            Instantiate(_prefabGroundCube, posToSpawn, Quaternion.identity, transform);
             worldData[idx[0], idx[1], idx[2]].isMinedBefore = false;
             worldData[idx[0], idx[1], idx[2]].isHollow = false;
         }
