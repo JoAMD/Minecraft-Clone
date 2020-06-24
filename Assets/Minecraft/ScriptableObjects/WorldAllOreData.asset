@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: WorldAllOreData
   m_EditorClassIdentifier: 
   allOresData:
+  - {fileID: 11400000, guid: 588a0a1e2e0a73e418ed561432a2a3f2, type: 2}
   - {fileID: 11400000, guid: b0718de2deadd074aa781e2e8e42367d, type: 2}
-  - {fileID: 11400000, guid: c5f9650914212574e8c585854bfd17a1, type: 2}
   - {fileID: 11400000, guid: b192c5d08297b4d41a3688f5ace8af25, type: 2}
+  - {fileID: 11400000, guid: c5f9650914212574e8c585854bfd17a1, type: 2}

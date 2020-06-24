@@ -8,13 +8,15 @@ public class WorldAllOreData : ScriptableObject
 
     public int OreFromDepthCalc(int yDepth)
     {
+        //Debug.Log("yDepth" + yDepth);
         for (int i = 0; i < allOresData.Count; i++)
         {
-            if(allOresData[i].oreUpperDepth >= yDepth && yDepth >= allOresData[i].oreLowerDepth)
+            if(-allOresData[i].oreUpperDepth >= yDepth && yDepth >= -allOresData[i].oreLowerDepth)
             {
                 return i;
             }
         }
-        return -1;
+        //for normal stone
+        return 0;
     }
 }

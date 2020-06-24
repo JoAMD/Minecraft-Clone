@@ -3135,7 +3135,7 @@ MonoBehaviour:
   - {fileID: 181858022}
   - {fileID: 468243338}
   originAndGround: {fileID: 282777302}
-  allOresData: {fileID: 0}
+  allOresData: {fileID: 11400000, guid: 7bbd23d71c55b694c9e8d1f3bf32fd81, type: 2}
 --- !u!4 &1708796850
 Transform:
   m_ObjectHideFlags: 0

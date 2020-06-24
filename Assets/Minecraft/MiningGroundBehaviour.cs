@@ -102,6 +102,7 @@ public class MiningGroundBehaviour : MonoBehaviour
 
 
             idx = GetIdx(posToSpawn);
+            //Debug.Log("idxX = " + idx[0] + "; idxY = " + idx[1] + "; idxZ = " + idx[2]);
             if(worldData[idx[0], idx[1], idx[2]].isMinedBefore)
             {
                 continue;
@@ -110,9 +111,10 @@ public class MiningGroundBehaviour : MonoBehaviour
             {
                 continue;
             }
-            int idx = new OreGeneration(allOresData).GenerateOre(posToSpawn.y);
-            Debug.Log("idx = " + idx);
-            _prefabGroundCube = allOresData.allOresData[idx].orePrefab;
+            int oreIdx = new OreGeneration(allOresData).GenerateOre(posToSpawn.y);
+            //Debug.Log("idx = " + oreIdx);
+
+            _prefabGroundCube = allOresData.allOresData[oreIdx].orePrefab;
 
             Instantiate(_prefabGroundCube, posToSpawn, Quaternion.identity, transform);
             worldData[idx[0], idx[1], idx[2]].isMinedBefore = false;
@@ -129,9 +131,9 @@ public class MiningGroundBehaviour : MonoBehaviour
         y = (int)pos.y;
         z = (int)pos.z;
 
-        x += 20 - 1;
-        y += 20 - 1;
-        z += 20 - 1;
+        x += worldSizeX / 2 - 1;
+        y += worldSizeY - 1;
+        z += worldSizeZ / 2 - 1;
 
         x /= groundSizeX;
         y /= groundSizeY;
