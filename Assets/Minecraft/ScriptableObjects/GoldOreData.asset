@@ -15,7 +15,7 @@ MonoBehaviour:
   oreName: Gold
   oreType: 2
   orePrefab: {fileID: 5375676464528336763, guid: 3e0dcb9abfe19f74baedd5309fca0818, type: 3}
-  oreUpperDepth: 350
+  oreUpperDepth: 76
   oreLowerDepth: 450
   totalPercentage: 30
   outZonePercentage: 5

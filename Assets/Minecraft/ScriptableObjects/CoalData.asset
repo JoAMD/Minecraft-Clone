@@ -16,6 +16,6 @@ MonoBehaviour:
   oreType: 1
   orePrefab: {fileID: 5375676464528336763, guid: c537fe5f92e1e4a439142199e3a98c42, type: 3}
   oreUpperDepth: 10
-  oreLowerDepth: 300
+  oreLowerDepth: 75
   totalPercentage: 50
   outZonePercentage: 20
