@@ -5,6 +5,8 @@ public class GroundBlockData
     public bool isMinedBefore;
     public bool isHollow;
     public int[] pos;
+    public Renderer rend;
+    public bool isSpawned = false;
 
     public GroundBlockData(bool isMined)
     {
@@ -28,6 +30,11 @@ public class GroundBlockData
         this.pos[0] = (int)pos.z;
     }
 
+    public void SetRenderer(Renderer rend)
+    {
+        this.rend = rend;
+    }
+
     //Use only for init cubes since isHollow is also set
     public void SetPosForInitCubesOnly(Vector3 pos)
     {
@@ -45,6 +52,8 @@ public class GroundBlockData
 
     public void MineBlock()
     {
+        isSpawned = false;
+        rend = null;
         isMinedBefore = true;
         isHollow = true;
     }

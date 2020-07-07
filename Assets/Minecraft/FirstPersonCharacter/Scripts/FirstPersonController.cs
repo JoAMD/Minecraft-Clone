@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityStandardAssets.CrossPlatformInput;
 using UnityStandardAssets.Utility;
 using Random = UnityEngine.Random;
@@ -15,6 +16,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
         [SerializeField] private float m_RunSpeed;
         [SerializeField] [Range(0f, 1f)] private float m_RunstepLenghten;
         [SerializeField] private float m_JumpSpeed;
+        private float m_OrigJumpSpeed;
         [SerializeField] private float m_StickToGroundForce;
         [SerializeField] private float m_GravityMultiplier;
         [SerializeField] private MouseLook m_MouseLook;
@@ -42,9 +44,32 @@ namespace UnityStandardAssets.Characters.FirstPerson
         private bool m_Jumping;
         private AudioSource m_AudioSource;
 
+
+        public void ToggleSuperPower(Toggle toggle)
+        {
+            if (toggle.isOn)
+            {
+                EnableSuperPower();
+            }
+            else
+            {
+                DisableSuperPower();
+            }
+        }
+        private void EnableSuperPower()
+        {
+            m_JumpSpeed = 20;
+        }
+        private void DisableSuperPower()
+        {
+            m_JumpSpeed = m_OrigJumpSpeed;
+        }
+
+
         // Use this for initialization
         private void Start()
         {
+            m_OrigJumpSpeed = m_JumpSpeed;
             m_CharacterController = GetComponent<CharacterController>();
             m_Camera = Camera.main;
             m_OriginalCameraPosition = m_Camera.transform.localPosition;

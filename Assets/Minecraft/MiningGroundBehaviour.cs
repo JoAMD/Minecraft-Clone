@@ -16,19 +16,23 @@ public class MiningGroundBehaviour : MonoBehaviour
     public int groundSizeZ = 1;
     public CubePosition[] DIR = new CubePosition[6];
 
-    private GroundBlockData[,,] worldData;
+    public GroundBlockData[,,] worldData;
     // Important! This indicates the number of blocks and not unity units
     [Header("Important! This indicates the number of blocks and not unity units")]
     public int worldSizeX = 10;
     public int worldSizeY = 10;
     public int worldSizeZ = 10;
 
-    public Transform[] initGroundBlocks;
+    public Transform[] initGroundBlocksHolder;
 
+    /// <summary>
+    /// Probablytop right, have to test
+    /// </summary>
     public Transform originAndGround;
     private float originAndGroundYPos;
 
     public WorldAllOreData allOresData;
+    public bool isDoneLoadingBlocks = false;
 
     private void Start()
     {
@@ -48,18 +52,45 @@ public class MiningGroundBehaviour : MonoBehaviour
                 for (int k = 0; k < worldSizeZ; k++)
                 {
                     worldData[i, j, k] = new GroundBlockData(false, true);
-                    //Debug.Log(i + " " + j + " " + k + "\n");
+                    //Debug.Log(i + " " + j + " " + k + "\n"); // will cause non responsive editor!!
                 }
             }
         }
 
-
-        for (int i = 0; i < initGroundBlocks.Length; i++)
+        int[] idxOriginGnd = GetIdx(originAndGround.position);
+        Vector3 pos;
+        for (int i = 0; i < worldSizeX; i++)
         {
-            int[] idx = GetIdx(initGroundBlocks[i].position);
-            worldData[idx[0], idx[1], idx[2]].SetPosForInitCubesOnly(initGroundBlocks[i].position);
+            for (int j = 0; j < worldSizeZ; j++)
+            {
+                pos = GetPos(new int[] { i, idxOriginGnd[1], j });
+                worldData[i, idxOriginGnd[1], j].SetPosForInitCubesOnly(pos);
+
+                worldData[i, idxOriginGnd[1], j].rend = Instantiate(_prefabGroundCube, pos, Quaternion.identity, transform).GetComponent<Renderer>();
+                worldData[i, idxOriginGnd[1], j].rend.enabled = false;
+                worldData[i, idxOriginGnd[1], j].isSpawned = true;
+                worldData[i, idxOriginGnd[1], j].isMinedBefore = false;
+                //Debug.Log(i + " " + j + " " + k + "\n");
+            }
         }
 
+        //for (int i = 0; i < initGroundBlocksHolder.Length; i++)
+        //{
+        //    for (int j = 0; j < initGroundBlocksHolder[i].childCount; j++)
+        //    {
+        //        int[] idx = GetIdx(initGroundBlocksHolder[i].GetChild(j).position);
+        //        worldData[idx[0], idx[1], idx[2]].SetPosForInitCubesOnly(initGroundBlocksHolder[i].GetChild(j).position);
+        //    }
+        //}
+
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Cursor.lockState = Cursor.lockState == CursorLockMode.Locked ? CursorLockMode.None : CursorLockMode.Locked;
+        }
     }
 
     public void MineAtPos(Vector3 groundCubePos, Vector3 normal)
@@ -116,15 +147,16 @@ public class MiningGroundBehaviour : MonoBehaviour
 
             _prefabGroundCube = allOresData.allOresData[oreIdx].orePrefab;
 
-            Instantiate(_prefabGroundCube, posToSpawn, Quaternion.identity, transform);
+            worldData[idx[0], idx[1], idx[2]].rend = Instantiate(_prefabGroundCube, posToSpawn, Quaternion.identity, transform).GetComponent<Renderer>();
             worldData[idx[0], idx[1], idx[2]].isMinedBefore = false;
             worldData[idx[0], idx[1], idx[2]].isHollow = false;
+            worldData[idx[0], idx[1], idx[2]].isSpawned = true;
         }
     }
 
 
 
-    private int[] GetIdx(Vector3 pos)
+    public int[] GetIdx(Vector3 pos)
     {
         int x, y, z;
         x = (int)pos.x;
@@ -140,7 +172,17 @@ public class MiningGroundBehaviour : MonoBehaviour
         z /= groundSizeZ;
 
         return new int[] { x, y, z };
+    }
 
+    private Vector3 GetPos(int[] idx)
+    {
+        Vector3 pos = new Vector3(idx[0] * groundSizeX, idx[1] * groundSizeY, idx[2] * groundSizeZ);
+
+        pos.x += -(worldSizeX / 2 - 1);
+        pos.y += -(worldSizeY - 1);
+        pos.z += -(worldSizeZ / 2 - 1);
+
+        return pos;
     }
 
 }
