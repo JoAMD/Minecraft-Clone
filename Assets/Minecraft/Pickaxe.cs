@@ -20,6 +20,28 @@ public class Pickaxe : MonoBehaviour
     private float Counter = 1;
     public float PickaxeDelay = 1;
 
+    public void ToggleSuperPower(Toggle toggle)
+    {
+        if (toggle.isOn)
+        {
+            EnableSuperPower();
+        }
+        else
+        {
+            DisableSuperPower();
+        }
+    }
+    private void EnableSuperPower()
+    {
+        Inrangee = 50;
+        PickaxeDelay = 0.05f;
+    }
+    private void DisableSuperPower()
+    {
+        Inrangee = 5;
+        PickaxeDelay = 0.3f;
+    }
+
     private void Update()
     {
         MineBlock();

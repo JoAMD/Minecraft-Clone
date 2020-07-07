@@ -68,3 +68,6 @@ Assets/StreamingAssets/*.bank
 fmod.log
 fmod_editor.log
 
+Assets/_ASCIIArt
+Assets/_ASCIIArt.meta
+

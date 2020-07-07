@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+using System;
 using UnityEngine;
 
 public class MiningGroundBehaviour : MonoBehaviour
@@ -24,8 +23,11 @@ public class MiningGroundBehaviour : MonoBehaviour
     public int worldSizeY = 10;
     public int worldSizeZ = 10;
 
-    public Transform[] initGroundBlocks;
+    public Transform[] initGroundBlocksHolder;
 
+    /// <summary>
+    /// Probablytop right, have to test
+    /// </summary>
     public Transform originAndGround;
     private float originAndGroundYPos;
 
@@ -55,19 +57,46 @@ public class MiningGroundBehaviour : MonoBehaviour
             }
         }
 
-
-        for (int i = 0; i < initGroundBlocks.Length; i++)
+        int[] idxOriginGnd = GetIdx(originAndGround.position);
+        Vector3 pos;
+        for (int i = 0; i < worldSizeX; i++)
         {
-            int[] idx = GetIdx(initGroundBlocks[i].position);
-            worldData[idx[0], idx[1], idx[2]].SetPosForInitCubesOnly(initGroundBlocks[i].position);
+            for (int j = 0; j < worldSizeZ; j++)
+            {
+                pos = GetPos(new int[] { i, idxOriginGnd[1], j });
+                worldData[i, idxOriginGnd[1], j].SetPosForInitCubesOnly(pos);
+
+                worldData[i, idxOriginGnd[1], j].rend = Instantiate(_prefabGroundCube, pos, Quaternion.identity, transform).GetComponent<Renderer>();
+                worldData[i, idxOriginGnd[1], j].rend.enabled = false;
+                worldData[i, idxOriginGnd[1], j].isSpawned = true;
+                worldData[i, idxOriginGnd[1], j].isMinedBefore = false;
+                //Debug.Log(i + " " + j + " " + k + "\n");
+            }
         }
+
+        //for (int i = 0; i < initGroundBlocksHolder.Length; i++)
+        //{
+        //    for (int j = 0; j < initGroundBlocksHolder[i].childCount; j++)
+        //    {
+        //        int[] idx = GetIdx(initGroundBlocksHolder[i].GetChild(j).position);
+        //        worldData[idx[0], idx[1], idx[2]].SetPosForInitCubesOnly(initGroundBlocksHolder[i].GetChild(j).position);
+        //    }
+        //}
 
     }
 
-    //private IEnumerator LoadAllWorldBlocks()
-    //{
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.U))
+        {
+            Cursor.lockState = Cursor.lockState == CursorLockMode.None ? CursorLockMode.Locked : CursorLockMode.None;
+        }
 
-    //}
+        //if (Input.GetKeyDown(KeyCode.Mouse0))
+        //{
+        //    Cursor.lockState = CursorLockMode.Locked;
+        //}
+    }
 
     public void MineAtPos(Vector3 groundCubePos, Vector3 normal)
     {
@@ -148,7 +177,17 @@ public class MiningGroundBehaviour : MonoBehaviour
         z /= groundSizeZ;
 
         return new int[] { x, y, z };
+    }
 
+    private Vector3 GetPos(int[] idx)
+    {
+        Vector3 pos = new Vector3(idx[0] * groundSizeX, idx[1] * groundSizeY, idx[2] * groundSizeZ);
+
+        pos.x += -(worldSizeX / 2 - 1);
+        pos.y += -(worldSizeY - 1);
+        pos.z += -(worldSizeZ / 2 - 1);
+
+        return pos;
     }
 
 }
