@@ -72,29 +72,26 @@ public class CullingBehaviour : MonoBehaviour
             {
                 for (int k = Mathf.Max(0, startIdx[2]); k < Mathf.Min(endIdx[2], MiningGroundBehaviour.sRef.worldSizeZ); k++)
                 {
-                    //Debug.Log(i + " " + j + " " + k + "\n"); // will cause non responsive editor!!
-                    int distFromPlayer = CalcDistFromPlayer(new int[] { i, j, k });
-                    //if (distFromPlayer > cullingMaxDist * 2.5f)
-                    //{
-                    //    if (isOnce)
-                    //    {
-                    //        return;
-                    //    }
-                    //    isOnce = true;
-                    //    i = playerPosIdx[0] - cullingMaxDist;
-                    //    j = playerPosIdx[1] - cullingMaxDist;
-                    //    k = playerPosIdx[2] - cullingMaxDist;
-                    //}
-                    if(distFromPlayer > cullingMaxDist)
+                    if (MiningGroundBehaviour.sRef.worldData[i, j, k].isSpawned)
                     {
-                        if (MiningGroundBehaviour.sRef.worldData[i, j, k].isSpawned) 
+                        //Debug.Log(i + " " + j + " " + k + "\n"); // will cause non responsive editor!!
+                        int distFromPlayer = CalcDistFromPlayer(new int[] { i, j, k });
+                        //if (distFromPlayer > cullingMaxDist * 2.5f)
+                        //{
+                        //    if (isOnce)
+                        //    {
+                        //        return;
+                        //    }
+                        //    isOnce = true;
+                        //    i = playerPosIdx[0] - cullingMaxDist;
+                        //    j = playerPosIdx[1] - cullingMaxDist;
+                        //    k = playerPosIdx[2] - cullingMaxDist;
+                        //}
+                        if (distFromPlayer > cullingMaxDist)
                         {
                             MiningGroundBehaviour.sRef.worldData[i, j, k].rend.enabled = false;
                         }
-                    }
-                    else
-                    {
-                        if (MiningGroundBehaviour.sRef.worldData[i, j, k].isSpawned)
+                        else
                         {
                             MiningGroundBehaviour.sRef.worldData[i, j, k].rend.enabled = true;
                         }

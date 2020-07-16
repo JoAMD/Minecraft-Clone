@@ -34,6 +34,12 @@ public class MiningGroundBehaviour : MonoBehaviour
     public WorldAllOreData allOresData;
     public bool isDoneLoadingBlocks = false;
 
+    public int currMinedBlockCtr = 0;
+    public int maxMineableBlocksCtr = 100;
+
+    public Transform blocksHolderTransform;
+    public Transform groundBlocksHolderTransform;
+
     private void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
@@ -59,6 +65,7 @@ public class MiningGroundBehaviour : MonoBehaviour
 
         int[] idxOriginGnd = GetIdx(originAndGround.position);
         Vector3 pos;
+        // --------------- Instantiated only all ground blocks ---------------
         for (int i = 0; i < worldSizeX; i++)
         {
             for (int j = 0; j < worldSizeZ; j++)
@@ -66,7 +73,7 @@ public class MiningGroundBehaviour : MonoBehaviour
                 pos = GetPos(new int[] { i, idxOriginGnd[1], j });
                 worldData[i, idxOriginGnd[1], j].SetPosForInitCubesOnly(pos);
 
-                worldData[i, idxOriginGnd[1], j].rend = Instantiate(_prefabGroundCube, pos, Quaternion.identity, transform).GetComponent<Renderer>();
+                worldData[i, idxOriginGnd[1], j].rend = Instantiate(_prefabGroundCube, pos, Quaternion.identity, groundBlocksHolderTransform).GetComponent<Renderer>();
                 worldData[i, idxOriginGnd[1], j].rend.enabled = false;
                 worldData[i, idxOriginGnd[1], j].isSpawned = true;
                 worldData[i, idxOriginGnd[1], j].isMinedBefore = false;
@@ -98,8 +105,26 @@ public class MiningGroundBehaviour : MonoBehaviour
         //}
     }
 
+
+    public bool BlockDead(Vector3 groundCubePos, Vector3 normal)
+    {
+        currMinedBlockCtr++;
+        if(currMinedBlockCtr < maxMineableBlocksCtr)
+        {
+            MineAtPos(groundCubePos, normal);
+            return true;
+        }
+        else
+        {
+            ResetMine();
+            currMinedBlockCtr = 0;
+            return false;
+        }
+    }
+
     public void MineAtPos(Vector3 groundCubePos, Vector3 normal)
     {
+
         //Debug.Log(groundCubePos);
         normal.x *= groundSizeX;
         normal.y *= groundSizeY;
@@ -152,7 +177,7 @@ public class MiningGroundBehaviour : MonoBehaviour
 
             _prefabGroundCube = allOresData.allOresData[oreIdx].orePrefab;
 
-            worldData[idx[0], idx[1], idx[2]].rend = Instantiate(_prefabGroundCube, posToSpawn, Quaternion.identity, transform).GetComponent<Renderer>();
+            worldData[idx[0], idx[1], idx[2]].rend = Instantiate(_prefabGroundCube, posToSpawn, Quaternion.identity, blocksHolderTransform).GetComponent<Renderer>();
             worldData[idx[0], idx[1], idx[2]].isMinedBefore = false;
             worldData[idx[0], idx[1], idx[2]].isHollow = false;
             worldData[idx[0], idx[1], idx[2]].isSpawned = true;
@@ -188,6 +213,53 @@ public class MiningGroundBehaviour : MonoBehaviour
         pos.z += -(worldSizeZ / 2 - 1);
 
         return pos;
+    }
+
+    /// <summary>
+    /// Reset Mine on collapse, can try optimising by storing a list of all spawned blocks if the variable maxMineableBlocksCtr is relatively low
+    /// </summary>
+    private void ResetMine()
+    {
+        string name = blocksHolderTransform.name;
+        Destroy(blocksHolderTransform.gameObject);
+        blocksHolderTransform = new GameObject(name).transform;
+
+        for (int i = 0; i < worldSizeX; i++)
+        {
+            for (int j = 0; j < worldSizeY; j++)
+            {
+                for (int k = 0; k < worldSizeZ; k++)
+                {
+                    // can cause lags
+                    int[] idx = { i, j, k };
+                    Vector3 pos = GetPos(idx);
+
+                    if (worldData[i, j, k].isSpawned)
+                    {
+
+                        //reset the block
+                        worldData[i, j, k].rend = null;
+                        worldData[i, j, k].isMinedBefore = false;
+                        worldData[i, j, k].isHollow = true; //?
+                        worldData[i, j, k].isSpawned = false;
+
+                    }
+                    else if (pos.y == originAndGroundYPos)
+                    {
+                        ////Do not reset if its ground block, but instantiate
+                        //Debug.Log(pos);
+
+                        //worldData[i, j, k].SetPosForInitCubesOnly(pos);
+                        //worldData[i, j, k].rend = Instantiate(_prefabGroundCube, pos, Quaternion.identity, groundBlocksHolderTransform).GetComponent<Renderer>();
+                        //worldData[i, j, k].rend.enabled = false;
+                        //worldData[i, j, k].isSpawned = true;
+                        //worldData[i, j, k].isMinedBefore = false;
+
+                    }
+                }
+            }
+        }
+        
     }
 
 }

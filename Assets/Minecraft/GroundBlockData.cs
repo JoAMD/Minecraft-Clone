@@ -2,8 +2,8 @@
 
 public class GroundBlockData
 {
-    public bool isMinedBefore;
-    public bool isHollow;
+    public bool isMinedBefore = false;
+    public bool isHollow = true;
     public int[] pos;
     public Renderer rend;
     public bool isSpawned = false;

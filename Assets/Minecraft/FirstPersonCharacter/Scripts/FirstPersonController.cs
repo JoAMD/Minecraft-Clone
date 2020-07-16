@@ -172,8 +172,21 @@ namespace UnityStandardAssets.Characters.FirstPerson
             }
             m_CollisionFlags = m_CharacterController.Move(m_MoveDir*Time.fixedDeltaTime);
 
+            TeleportPlayerCheck();
+
             ProgressStepCycle(speed);
             UpdateCameraPosition(speed);
+        }
+
+        public bool isTeleport = false;
+        public Vector3 teleportPos;
+        private void TeleportPlayerCheck()
+        {
+            if (isTeleport)
+            {
+                transform.position = teleportPos;
+                isTeleport = false;
+            }
         }
 
 

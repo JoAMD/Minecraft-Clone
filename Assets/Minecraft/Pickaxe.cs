@@ -20,6 +20,9 @@ public class Pickaxe : MonoBehaviour
     private float Counter = 1;
     public float PickaxeDelay = 1;
 
+    public Transform mineCollapseResetPos;
+    public UnityStandardAssets.Characters.FirstPerson.FirstPersonController fpsController;
+
     public void ToggleSuperPower(Toggle toggle)
     {
         if (toggle.isOn)
@@ -82,26 +85,26 @@ public class Pickaxe : MonoBehaviour
         //}
     }
 
-    private bool BlockDead()
-    {
-        MiningGroundBehaviour.sRef.MineAtPos(hit.collider.transform.position, hit.normal);
-        Destroy(hit.collider.gameObject);
-        return true;
-        //if (hit.collider.GetComponent<MiningBlock>().CurBlockHP <= 0)
-        //{
-        //    if (hit.collider.CompareTag("Stone") || hit.collider.CompareTag("Rock"))
-        //    {
-        //        hit.collider.GetComponent<MiningBlock>().MakeNewBlock();
-        //        _PlayerController.MiningCoins += hit.collider.GetComponent<MiningBlock>().MaxBlockHP *= hit.collider.GetComponent<MiningBlock>().CoinsPerHit;
-        //        _PlayerController.CurCarryWeight += hit.collider.GetComponent<MiningBlock>().MaxBlockHP;
-        //    }
-        //    return true;
-        //}
-        //else
-        //{
-        //    return false;
-        //}
-    }
+    //private bool BlockDead()
+    //{
+    //    MiningGroundBehaviour.sRef.MineAtPos(hit.collider.transform.position, hit.normal);
+    //    Destroy(hit.collider.gameObject);
+    //    return true;
+    //    //if (hit.collider.GetComponent<MiningBlock>().CurBlockHP <= 0)
+    //    //{
+    //    //    if (hit.collider.CompareTag("Stone") || hit.collider.CompareTag("Rock"))
+    //    //    {
+    //    //        hit.collider.GetComponent<MiningBlock>().MakeNewBlock();
+    //    //        _PlayerController.MiningCoins += hit.collider.GetComponent<MiningBlock>().MaxBlockHP *= hit.collider.GetComponent<MiningBlock>().CoinsPerHit;
+    //    //        _PlayerController.CurCarryWeight += hit.collider.GetComponent<MiningBlock>().MaxBlockHP;
+    //    //    }
+    //    //    return true;
+    //    //}
+    //    //else
+    //    //{
+    //    //    return false;
+    //    //}
+    //}
 
     private void ResetTimeOnChange(GameObject nextHitObject)
     {
@@ -150,7 +153,15 @@ public class Pickaxe : MonoBehaviour
                     if (MiningSpeed())
                     {
                         //hit.collider.GetComponent<MiningBlock>().CurBlockHP -= PickaxeDmg;
-                        BlockDead();
+                        if (MiningGroundBehaviour.sRef.BlockDead(hit.collider.transform.position, hit.normal))
+                        {
+                            Destroy(hit.collider.gameObject);
+                        }
+                        else
+                        {
+                            //teleport
+                            TeleportPlayerOnMineCollapse();
+                        }
                     }
                 }
             }
@@ -164,5 +175,12 @@ public class Pickaxe : MonoBehaviour
             HPBarCanvas.SetActive(false);
             Counter = 0;
         }
+    }
+
+    private void TeleportPlayerOnMineCollapse()
+    {
+        fpsController.teleportPos = mineCollapseResetPos.position;
+        fpsController.isTeleport = true;
+        //transform.position = mineCollapseResetPos.position;
     }
 }
