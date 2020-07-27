@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class MiningGroundBehaviour : MonoBehaviour
@@ -9,6 +10,12 @@ public class MiningGroundBehaviour : MonoBehaviour
     {
         sRef = this;
     }
+
+    public Transform player;
+    public int resetCullingMaxDist = 20;
+
+    public Transform start;
+    public Transform end;
 
     public GameObject _prefabGroundCube;
     public int groundSizeX = 1;
@@ -39,6 +46,8 @@ public class MiningGroundBehaviour : MonoBehaviour
 
     public Transform blocksHolderTransform;
     public Transform groundBlocksHolderTransform;
+
+    public List<Vector3> minedBlocks;
 
     private void Start()
     {
@@ -112,6 +121,7 @@ public class MiningGroundBehaviour : MonoBehaviour
         if(currMinedBlockCtr < maxMineableBlocksCtr)
         {
             MineAtPos(groundCubePos, normal);
+            minedBlocks.Add(groundCubePos);
             return true;
         }
         else
@@ -215,50 +225,116 @@ public class MiningGroundBehaviour : MonoBehaviour
         return pos;
     }
 
+    //protected override void CullFunction(bool isEnable, int i, int j, int k)
+    //{
+    //    if (isEnable)
+    //    {
+    //        Vector3 pos = GetPos(new int[] { i, j, k });
+    //        if (worldData[i, j, k].isSpawned && pos.y != originAndGroundYPos)
+    //        {
+
+    //            //reset the block
+    //            worldData[i, j, k].rend = null;
+    //            worldData[i, j, k].isMinedBefore = false;
+    //            worldData[i, j, k].isHollow = true; //?
+    //            worldData[i, j, k].isSpawned = false;
+
+    //        }
+    //    }
+    //}
+
+    //protected override void GroundCullHelper(int i, int j, int k)
+    //{
+    //    Vector3 pos = GetPos(new int[] { i, j, k });
+    //    if (pos.y == originAndGroundYPos && !worldData[i, j, k].isSpawned)
+    //    {
+    //        ////Do not reset if its ground block, but instantiate
+    //        Debug.Log(pos);
+
+    //        worldData[i, j, k].SetPosForInitCubesOnly(pos);
+    //        worldData[i, j, k].rend = Instantiate(_prefabGroundCube, pos, Quaternion.identity, groundBlocksHolderTransform).GetComponent<Renderer>();
+    //        worldData[i, j, k].rend.enabled = false;
+    //        worldData[i, j, k].isSpawned = true;
+    //        worldData[i, j, k].isMinedBefore = false;
+    //    }
+    //}
+
     /// <summary>
     /// Reset Mine on collapse, can try optimising by storing a list of all spawned blocks if the variable maxMineableBlocksCtr is relatively low
     /// </summary>
     private void ResetMine()
     {
-        string name = blocksHolderTransform.name;
-        Destroy(blocksHolderTransform.gameObject);
-        blocksHolderTransform = new GameObject(name).transform;
+        //string name = blocksHolderTransform.name;
+        //Destroy(blocksHolderTransform.gameObject);
+        //blocksHolderTransform = new GameObject(name).transform;
 
-        for (int i = 0; i < worldSizeX; i++)
+        for (int r = 0; r < minedBlocks.Count; r++)
         {
-            for (int j = 0; j < worldSizeY; j++)
+            Vector3 pos = minedBlocks[r];
+            int[] idx = GetIdx(pos);
+            int i = idx[0];
+            int j = idx[1];
+            int k = idx[2];
+            if (/*worldData[i, j, k].isSpawned && */pos.y != originAndGroundYPos)
             {
-                for (int k = 0; k < worldSizeZ; k++)
-                {
-                    // can cause lags
-                    int[] idx = { i, j, k };
-                    Vector3 pos = GetPos(idx);
 
-                    if (worldData[i, j, k].isSpawned)
-                    {
+                //reset the block
+                worldData[i, j, k].rend = null;
+                worldData[i, j, k].isMinedBefore = false;
+                worldData[i, j, k].isHollow = true; //?
+                worldData[i, j, k].isSpawned = false;
 
-                        //reset the block
-                        worldData[i, j, k].rend = null;
-                        worldData[i, j, k].isMinedBefore = false;
-                        worldData[i, j, k].isHollow = true; //?
-                        worldData[i, j, k].isSpawned = false;
+            }
+            else //if (pos.y == originAndGroundYPos /*&& !worldData[i, j, k].isSpawned*/)
+            {
+                ////Do not reset if its ground block, but instantiate
+                Debug.Log(pos);
 
-                    }
-                    else if (pos.y == originAndGroundYPos)
-                    {
-                        ////Do not reset if its ground block, but instantiate
-                        //Debug.Log(pos);
-
-                        //worldData[i, j, k].SetPosForInitCubesOnly(pos);
-                        //worldData[i, j, k].rend = Instantiate(_prefabGroundCube, pos, Quaternion.identity, groundBlocksHolderTransform).GetComponent<Renderer>();
-                        //worldData[i, j, k].rend.enabled = false;
-                        //worldData[i, j, k].isSpawned = true;
-                        //worldData[i, j, k].isMinedBefore = false;
-
-                    }
-                }
+                worldData[i, j, k].SetPosForInitCubesOnly(pos);
+                worldData[i, j, k].rend = Instantiate(_prefabGroundCube, pos, Quaternion.identity, groundBlocksHolderTransform).GetComponent<Renderer>();
+                worldData[i, j, k].rend.enabled = false;
+                worldData[i, j, k].isSpawned = true;
+                worldData[i, j, k].isMinedBefore = false;
             }
         }
+        minedBlocks.Clear();
+        //CullingRun(player.transform.position, resetCullingMaxDist, ref start, ref end);
+
+        //for (int i = 0; i < worldSizeX; i++)
+        //{
+        //    for (int j = 0; j < worldSizeY; j++)
+        //    {
+        //        for (int k = 0; k < worldSizeZ; k++)
+        //        {
+        //            // can cause lags
+        //            int[] idx = { i, j, k };
+        //            Vector3 pos = GetPos(idx);
+
+        //            if (worldData[i, j, k].isSpawned)
+        //            {
+
+        //                //reset the block
+        //                worldData[i, j, k].rend = null;
+        //                worldData[i, j, k].isMinedBefore = false;
+        //                worldData[i, j, k].isHollow = true; //?
+        //                worldData[i, j, k].isSpawned = false;
+
+        //            }
+        //            else if (pos.y == originAndGroundYPos)
+        //            {
+        //                ////Do not reset if its ground block, but instantiate
+        //                //Debug.Log(pos);
+
+        //                //worldData[i, j, k].SetPosForInitCubesOnly(pos);
+        //                //worldData[i, j, k].rend = Instantiate(_prefabGroundCube, pos, Quaternion.identity, groundBlocksHolderTransform).GetComponent<Renderer>();
+        //                //worldData[i, j, k].rend.enabled = false;
+        //                //worldData[i, j, k].isSpawned = true;
+        //                //worldData[i, j, k].isMinedBefore = false;
+
+        //            }
+        //        }
+        //    }
+        //}
         
     }
 

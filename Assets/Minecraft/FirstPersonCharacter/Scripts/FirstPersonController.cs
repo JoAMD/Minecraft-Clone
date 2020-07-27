@@ -185,6 +185,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
             if (isTeleport)
             {
                 transform.position = teleportPos;
+                CullingBehaviour.sRef.Force_CullingRun();
                 isTeleport = false;
             }
         }

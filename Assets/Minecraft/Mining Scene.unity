@@ -17621,14 +17621,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bcbff3d5b0e689d4d9b85556d73f28a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  player: {fileID: 1424751167}
+  resetCullingMaxDist: 40
+  start: {fileID: 3355401977359907176}
+  end: {fileID: 7797983816961976906}
   _prefabGroundCube: {fileID: 5375676464528336763, guid: 66cbeb03c58f43c48b92fe4572e77592,
     type: 3}
   groundSizeX: 1
   groundSizeY: 1
   groundSizeZ: 1
-  worldSizeX: 200
+  worldSizeX: 50
   worldSizeY: 650
-  worldSizeZ: 200
+  worldSizeZ: 50
   initGroundBlocksHolder:
   - {fileID: 241775734}
   - {fileID: 859603984}
