@@ -108,6 +108,15 @@ public class MiningGroundBehaviour : MonoBehaviour
             Cursor.lockState = Cursor.lockState == CursorLockMode.None ? CursorLockMode.Locked : CursorLockMode.None;
         }
 
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            maxMineableBlocksCtr += 10;
+        }
+        else if (Input.GetKeyDown(KeyCode.O) && maxMineableBlocksCtr > 19)
+        {
+            maxMineableBlocksCtr -= 10;
+        }
+
         //if (Input.GetKeyDown(KeyCode.Mouse0))
         //{
         //    Cursor.lockState = CursorLockMode.Locked;
@@ -191,6 +200,7 @@ public class MiningGroundBehaviour : MonoBehaviour
             worldData[idx[0], idx[1], idx[2]].isMinedBefore = false;
             worldData[idx[0], idx[1], idx[2]].isHollow = false;
             worldData[idx[0], idx[1], idx[2]].isSpawned = true;
+            minedBlocks.Add(worldData[idx[0], idx[1], idx[2]].rend.transform.position);
         }
     }
 
@@ -277,7 +287,11 @@ public class MiningGroundBehaviour : MonoBehaviour
             int k = idx[2];
             if (/*worldData[i, j, k].isSpawned && */pos.y != originAndGroundYPos)
             {
-
+                if (!worldData[i, j, k].isMinedBefore && worldData[i, j, k].isSpawned)
+                {
+                    //Destroy(worldData[i, j, k].re)
+                    worldData[i, j, k].rend.enabled = false;
+                }
                 //reset the block
                 worldData[i, j, k].rend = null;
                 worldData[i, j, k].isMinedBefore = false;

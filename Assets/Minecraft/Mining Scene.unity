@@ -17653,9 +17653,10 @@ MonoBehaviour:
   allOresData: {fileID: 11400000, guid: 7bbd23d71c55b694c9e8d1f3bf32fd81, type: 2}
   isDoneLoadingBlocks: 0
   currMinedBlockCtr: 0
-  maxMineableBlocksCtr: 10
+  maxMineableBlocksCtr: 100
   blocksHolderTransform: {fileID: 737251647}
   groundBlocksHolderTransform: {fileID: 895988085}
+  minedBlocks: []
 --- !u!4 &1708796850
 Transform:
   m_ObjectHideFlags: 0

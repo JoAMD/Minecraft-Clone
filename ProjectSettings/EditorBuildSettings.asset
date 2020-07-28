@@ -4,5 +4,8 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Minecraft/Mining Scene.unity
+    guid: a90ef2348830eab469b14a02db71cec2
   m_configObjects: {}
